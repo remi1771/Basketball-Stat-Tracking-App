@@ -1,9 +1,11 @@
+#Fuck My Life it's clear that I can't do cmd AND tkinter at the same time because i'm a shitty af programmer, so everything on tkinter it is which fucking sucks honestly because i'm not quite sure that tkinter has a getkey() functionality or something but oh well
 
-import os
-import subprocess
-import keyboard
-from stats_display_tk import StatsDisplayTk
+import tkinter as tk
+from tkinter import filedialog
+from tkinter import messagebox
 
+
+#Classes:
 class Player:
     def __init__(self, name, team, number):
         self.name = name
@@ -40,7 +42,6 @@ class Team:
         self.name = name
         self.possessions = {}
         self.total_points = 0
-
 class Game:
     def __init__(self):
         self.current_possession = None
@@ -286,39 +287,125 @@ class Game:
         player.possessions += 1
         self.current_possession = None
         self.steal_check()     
-   
-game = Game()
-team1 = Team("Team 1")
-team2 = Team("Team 2")
-
-# Create an instance of the Player class for "John Doe" on team1 with number 39
-john_doe = Player("John Doe", team2, 39)
-player1 = Player("Player 1", team1,1)
-player2 = Player("Player 2", team1,2)
-player3 = Player("Player 3", team2,1)
-
-game.add_team(team1)
-game.add_team(team2)
-game.add_player(player1)
-game.add_player(player2)
-game.add_player(player3)
-game.add_player(john_doe)
 
 
-# Select the initial player in possession
-game.select_player()
+# Screen 1: Main Menu
+def show_main_menu():
+    clear_window()
+    tk.Button(window, text="New Game", command=show_screen_2).pack()
+    tk.Button(window, text="Load", command=load_file).pack()
 
-game.start()
-
-while True:
-    result = game.input_action()  # Call input_action which now includes the prompt
+# Screen 2: Game Screen
+def show_screen_2():
+    clear_window()
+    global loaded_file_label, current_player_label
+    loaded_file_label = tk.Label(window, text="File: None")
+    loaded_file_label.pack()
+    current_player_label = tk.Label(window, text="Current Player in possession:")
+    current_player_label.pack()
     
-    if result == 'quit':  # Check if input_action returned the 'quit' signal
-        game.stats_display.close()
-        break
-    elif result == 'stats':  # Add this condition to print stats
-        game.print_stats()
+    tk.Button(window, text="Dribble", command=lambda: action_performed("Dribble")).pack()
+    tk.Button(window, text="Pass", command=lambda: action_performed("Pass")).pack()
+    tk.Button(window, text="Layup", command=lambda: action_performed("Layup")).pack()
+    tk.Button(window, text="Shoot 2", command=lambda: action_performed("Shoot 2")).pack()
+    tk.Button(window, text="Shoot 3", command=lambda: action_performed("Shoot 3")).pack()
+    tk.Button(window, text="Turnover", command=lambda: action_performed("Turnover")).pack()
+    tk.Button(window, text="Save", command=save_game).pack()
+
+# Function to clear the window
+def clear_window():
+    for widget in window.winfo_children():
+        widget.destroy()
+
+# Function to load a file
+def load_file():
+    file_path = filedialog.askopenfilename(filetypes=[("Spreadsheet files", "*.csv *.xlsx"), ("All files", "*.*")])
+    if file_path:
+        show_screen_2()
+        loaded_file_label.config(text=f"File: {file_path}")
+
+# Function to handle an action (like "Dribble", "Pass", etc.)
+def action_performed(action):
+    # Here you can add your logic to handle each action
+    print(f"Action performed: {action}")
+
+# Function to save the game
+def save_game():
+    # Here you can add your logic to save the game
+    messagebox.showinfo("Save", "Game saved successfully (not really, just a placeholder).")
+
+# Create the main window
+window = tk.Tk()
+window.title("Stat Tracking App")
+
+# Start with the main menu
+show_main_menu()
+
+# Run the application
+window.mainloop()
+
+
+
+
+'''
+---------------------------------------
+
+To integrate the dribble function into the GUI, you would first need to adapt it to work in an event-driven environment like Tkinter, as opposed to the loop and keyboard checks in a console application.
+
+Here's a simplified version of your dribble function adapted for the GUI:
+
+
+class StatTracker:
+    def __init__(self, window):
+        self.window = window
+        self.current_possession = None  # You'll need to set this when a player is selected
         
-    game.update_gui()
+        # ... other initialization code ...
+
+    def select_player(self):
+        # This method should allow the user to select a player
+        # Placeholder for selecting a player - you will need to implement this
+        pass
+
+    def dribble(self):
+        if self.current_possession is None:
+            print("No player in possession. Please select a player.")
+            self.select_player()
+            if self.current_possession is None:  # Check again after trying to select a player
+                return
+
+        self.current_possession.dribbles += 1
+        message = f"{self.current_possession.name} dribbled ({self.current_possession.dribbles})."
+        print(message)  # You might want to update this to show the message in the GUI
+
+    # ... other methods ...
+
+# Example Player class
+class Player:
+    def __init__(self, name):
+        self.name = name
+        self.dribbles = 0
+
+# Then, in the GUI setup function, you would bind the dribble action to a button:
+
+def show_screen_2(stat_tracker):
+    clear_window()
+    global loaded_file_label, current_player_label
+    loaded_file_label = tk.Label(window, text="File: None")
+    loaded_file_label.pack()
+    current_player_label = tk.Label(window, text="Current Player in possession:")
+    current_player_label.pack()
     
-game.stats_display.run()
+    # Dribble button with command linked to the dribble method of the stat tracker
+    tk.Button(window, text="Dribble", command=stat_tracker.dribble).pack()
+
+    # ... other buttons ...
+
+# And when creating the StatTracker instance:
+tracker = StatTracker(window)
+show_screen_2(tracker)
+
+# Remember to include the rest of the GUI setup and the main loop
+In this adapted code, when the "Dribble" button is pressed in the GUI, it will call the dribble method of the StatTracker instance tracker. The dribble method will then check if there is a current player in possession and, if so, increment their dribble count and print the message. The Player class is a placeholder for whatever player object you're using to track stats.
+
+Please note that the GUI version does not continuously check for key presses like the console version. Instead, it reacts to events (like button presses). Also, in a GUI application, you typically would not print to the console; you would update the GUI with new information, perhaps in a label or text box.'''

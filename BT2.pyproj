@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>29b221c3-2e00-4bb3-afa7-bc2768de4c0b</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>BT2.py</StartupFile>
+    <StartupFile>Tkinter_Rework_FML.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -23,6 +23,7 @@
   <ItemGroup>
     <Compile Include="BT2.py" />
     <Compile Include="stats_display_tk.py" />
+    <Compile Include="Tkinter_Rework_FML.py" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="stats.txt" />
