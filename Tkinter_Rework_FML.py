@@ -71,158 +71,59 @@ class Game:
         if not hasattr(player_team, 'players'):
             player_team.players = []
         player_team.players.append(player)
-        
-    #Print Stats functions    
-    def start(self):
-        self.update_gui()
-        self.root.mainloop()
 
-    #this will def get yeeted
-    def get_stats_text(self):
-        # Prepare the stats text
-        stats_lines = [
-            "Player Stats:",
-            "=======================================================================================================================================================================================================",
-            "PLAYER  |  POINTS  |  ASSISTS  |  STEALS  |  TURNOVERS  |  POSSESSIONS  |  FGA  |  FGM  |  2PM  |  2PA  |  3PM  |  3PA  |  Lym  |  LyA  |  PASSESS  |  OFFREB  |  DEFREB  |  INTERCEPTIONS  |  DRIBBLES",
-            "=======================================================================================================================================================================================================",
-        ]
-        
-        for player in self.players:
-            player_stats = f"{player.name} | {player.points} | {player.assists} | {player.steals} | {player.turnovers} | {player.possessions} | {player.shots_made} | {player.shots_attempted} | {player.two_point_makes} | {player.two_point_attempts} | {player.three_point_makes} | {player.three_point_attempts} | {player.layups_makes} | {player.layups_attempts} | {player.passes} | {player.offensive_rebounds} | {player.defensive_rebounds} | {player.interceptions} | {player.dribbles}"
-            stats_lines.append(player_stats)
-            stats_lines.append("________________________________________________________________________________________________________________________________________________________________________________________________________________________________________")
+    def update_possession_label(self):
+    current_player_label.config(text=f"Current Player in possession: {self.current_possession}")
 
-        stats_lines.append("\nTeam Stats:")
-        for team_name, team in self.teams.items():
-            team_stats = f"Team: {team.name}, Total Points: {team.total_points}"
-            stats_lines.append(team_stats)
-        
-        stats_text = "\n".join(stats_lines)
-        return stats_text
-
-    def update_gui(self):
-        self.stats_display.update_stats(self.get_stats_text())
-        # Schedule the update_gui method to run in the future using the 'after' method
-        self.root.after(1000, self.update_gui)
-        
-         
-    #Pre-Game Functions
-         
     def set_current_possession(self, player):
         self.current_possession = player   
                    
     def select_player(self):
-        print("Select a player for possession:")
-        for i, player in enumerate(self.players):
-            print(f"{i+1}. {player.name} (#{player.number})")
-        player_number = int(input("Enter the number of the player: ")) - 1
-
-        # Check if the player number is valid
-        if 0 <= player_number < len(self.players):
-            self.current_possession = self.players[player_number]
-        else:
-            print("Invalid player number.")
-
-    #In-Game functions
+        pass #Here it should show all possible player, inside tkinter
+        
     def dribble(self)
         self.current_possession.dribbles += 1
         message = f"{self.current_possession.name} dribbled ({self.current_possession.dribbles})."
-        
-    def input_action(self):
-        message = ""
-        if self.current_possession is None:
-            print("No player in possession. Please select a player.")
-            self.select_player()
-            if self.current_possession is None:  # Check again after trying to select a player
-                return
-                
-        while True:
-            try:
-                key_pressed = keyboard.read_key().lower()
-                if key_pressed == 'd':
 
-                    keyboard.read_key()
-                    break
-                
-                elif key_pressed == 'P':
-                    other_player_number = int(input("Input the number of the player who received the pass: "))
-                    other_player = next((p for p in self.players if p.number == other_player_number), None)
-                    if other_player is not None:
-                        other_player.received_passes_from[self.current_possession.number] = \
-                            other_player.received_passes_from.get(self.current_possession.number, 0) + 1
+    def passes()
+        other_player_number = int(input("Input the number of the player who received the pass: "))
+        other_player = next((p for p in self.players if p.number == other_player_number), None)
+        if other_player is not None:
+            other_player.received_passes_from[self.current_possession.number] = \
+                other_player.received_passes_from.get(self.current_possession.number, 0) + 1
 
-                        # Increment the count in the made_passes_to dictionary for the current player
-                        self.current_possession.made_passes_to[other_player.number] = \
-                            self.current_possession.made_passes_to.get(other_player.number, 0) + 1
+            # Increment the count in the made_passes_to dictionary for the current player
+            self.current_possession.made_passes_to[other_player.number] = \
+                self.current_possession.made_passes_to.get(other_player.number, 0) + 1
 
-                        # Increment the current player's possessions and passes count
-                        self.current_possession.possessions += 1
-                        self.current_possession.passes += 1
-                        self.current_possession.attempted_passes += 1
+            # Increment the current player's possessions and passes count
+            self.current_possession.possessions += 1
+            self.current_possession.passes += 1
+            self.current_possession.attempted_passes += 1
 
-                        self.current_possession = other_player
-                    break
-            
-                elif key_pressed == '1':
-                    self.layup_attempt(self.current_possession)
-                    break
-                
-                elif key_pressed == '2':
-                    self.shoot_two_point_attempt(self.current_possession)
-                    break
-                 
-                elif key_pressed == '3':
-                    self.shoot_three_point_attempt(self.current_possession)
-                    break
-                    
-                elif key_pressed == 'x':
-                    self.current_possession.turnovers += 1
-                    self.turnover(self.current_possession)
-                    break
+            self.current_possession = other_player
+        break
 
-                elif key_pressed == 'q':
-                    print("Game over.")
-                    return 'quit'  # Return a special value to signal the end of the game
-                    break
-
-
-            except Exception as e:
-                # Handle exceptions, if any
-                print(f"An error occurred: {e}")
-                break  # Break the loop if there is an error
-
-        self.clear_screen()
-        self.print_stats()
-        print(message)
+    def turnover()
+        self.current_possession.turnovers += 1
+        pass #call a function to check for steals or interceptions
                
     def steal_check(self):
-        steals = input("Input the number of the player who got the steal, if none (or interception) then simply state null: ").lower()
-        if steals != 'null':
-            steals_player_number = int(steals)
-            steals_player = next((p for p in self.players if p.number == steals_player_number), None)
-            if steals_player is not None:
-                steals_player.steals += 1
-                self.current_possession = steals_player
-        else:
-            self.interception_check()
-            
+        pass #ask which player got the steal
+        pass #change possession to player who got the steal
+        pass #add +1 to steals to whoever stole the ball
+
     def interception_check(self):
-        interception = input("Input the number of the player who got the interception, if none then simply state null: ").lower()
-        if interception != 'null':
-            interception_player_number = int(interception)
-            interception_player = next((p for p in self.players if p.number == interception_player_number), None)
-            if interception_player is not None:
-                interception_player.interceptions += 1
-                self.current_possession = interception_player
-        else:
-            self.current_possession = None
+        pass #ask which player got the steal
+        pass #change possession to player who got the steal
+        pass #add +1 to interception to whoever stole the ball
             
     def layup_attempt(self, player):
         player.possessions += 1
         player.shots_attempted +=1
         player.layups_attempts += 1
 
-        made = input("Did the shot go in? (y/n) ").lower() == 'y'
+        pass #ask if player went in
         if made:
             player.shots_made +=1
             player.layups_makes += 1
@@ -308,8 +209,7 @@ def show_screen_2():
     current_player_label = tk.Label(window, text="Current Player in possession:")
     current_player_label.pack()
     
-    tk.Button(window, text="Dribble", command=lambda: action_performed("Dribble")).pack()
-    tk.Button(window, text="Dribble", command=stat_tracker.dribble).pack()
+    tk.Button(window, text="Dribble", command=dribble).pack()
     tk.Button(window, text="Pass", command=lambda: action_performed("Pass")).pack()
     tk.Button(window, text="Layup", command=lambda: action_performed("Layup")).pack()
     tk.Button(window, text="Shoot 2", command=lambda: action_performed("Shoot 2")).pack()
