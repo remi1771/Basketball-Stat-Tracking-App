@@ -12,43 +12,51 @@ class Player:
         self.team = team
         self.number = number
         self.possessions = 0
-        self.passes = 0
+        self.dribbles = 0
         
+        #Passes
+        self.passes = 0
         self.attempted_passes = 0
         self.received_passes = 0
-        
         self.received_passes_from = {}
         self.made_passes_to = {}
-        
-        self.dribbles = 0
+        self.assists = 0
+        self.assists_made_to = {}
+
+        #Shooting
+        self.points = 0
         self.shots_made = 0
         self.shots_attempted = 0
-        self.turnovers = 0
         self.layups_attempts = 0
         self.layups_makes = 0
         self.two_point_attempts = 0
         self.two_point_makes = 0
         self.three_point_attempts = 0
         self.three_point_makes = 0
+        
+        #Hustle and Defense
         self.offensive_rebounds = 0
         self.defensive_rebounds = 0
         self.steals = 0
         self.interceptions = 0
-        self.assists = 0
-        self.assists_made_to = {}
-        self.points = 0
+        self.turnovers = 0
+
+#I'm thinking of removing the class team alltogether, is it REALLY necessary?
+#I mean, you can just get the stats calculated by hand, and it might make it so that you can't track stats on 1v1v1 or other weird mode that requires more than 2 teams.
+#No but seriously what purpose does team have?
+#Actually might be helpful to determine if rebounds are offensive or defensive huh
+
 class Team:
     def __init__(self, name):
         self.name = name
         self.possessions = {}
         self.total_points = 0
+        
 class Game:
     def __init__(self):
         self.current_possession = None
         self.players = []
-        self.teams = {}
-        self.stats_display = StatsDisplayTk()
-        self.stats_display.run()
+        self.teams = [] #Was a dictionary changed it to index because teams should be numbers not names no one cares about names, lol
         
     def add_team(self, team):
         self.teams[team.name] = team
@@ -68,7 +76,8 @@ class Game:
     def start(self):
         self.update_gui()
         self.root.mainloop()
-        
+
+    #this will def get yeeted
     def get_stats_text(self):
         # Prepare the stats text
         stats_lines = [
@@ -96,12 +105,7 @@ class Game:
         # Schedule the update_gui method to run in the future using the 'after' method
         self.root.after(1000, self.update_gui)
         
-    #Main Console GUI functions
-
-    def clear_screen(self):
-        os.system('cls' if os.name == 'nt' else 'clear')        
- 
-        
+         
     #Pre-Game Functions
          
     def set_current_possession(self, player):
@@ -120,6 +124,10 @@ class Game:
             print("Invalid player number.")
 
     #In-Game functions
+    def dribble(self)
+        self.current_possession.dribbles += 1
+        message = f"{self.current_possession.name} dribbled ({self.current_possession.dribbles})."
+        
     def input_action(self):
         message = ""
         if self.current_possession is None:
@@ -127,16 +135,12 @@ class Game:
             self.select_player()
             if self.current_possession is None:  # Check again after trying to select a player
                 return
-
-        print("Press 'D' for Dribble\nPress 'P' for Pass\nPress '1' for Layup\nPress '2' for Shoot 2\nPress '3' for Shoot 3\nPress 'x' for Turnover\nPress 'Q' to Quit")
-
-        # We will use a loop to continuously check for key presses
+                
         while True:
             try:
                 key_pressed = keyboard.read_key().lower()
                 if key_pressed == 'd':
-                    self.current_possession.dribbles += 1
-                    message = f"{self.current_possession.name} dribbled ({self.current_possession.dribbles})."
+
                     keyboard.read_key()
                     break
                 
@@ -305,6 +309,7 @@ def show_screen_2():
     current_player_label.pack()
     
     tk.Button(window, text="Dribble", command=lambda: action_performed("Dribble")).pack()
+    tk.Button(window, text="Dribble", command=stat_tracker.dribble).pack()
     tk.Button(window, text="Pass", command=lambda: action_performed("Pass")).pack()
     tk.Button(window, text="Layup", command=lambda: action_performed("Layup")).pack()
     tk.Button(window, text="Shoot 2", command=lambda: action_performed("Shoot 2")).pack()
@@ -350,12 +355,13 @@ window.mainloop()
 '''
 ---------------------------------------
 
-To integrate the dribble function into the GUI, you would first need to adapt it to work in an event-driven environment like Tkinter, as opposed to the loop and keyboard checks in a console application.
+To integrate the dribble function into the GUI, you would first need to adapt it to work in 
+an event-driven environment like Tkinter, as opposed to the loop and keyboard checks in a console application.
 
 Here's a simplified version of your dribble function adapted for the GUI:
 
 
-class StatTracker:
+class StatTracker: #que vendria a ser game en realidad
     def __init__(self, window):
         self.window = window
         self.current_possession = None  # You'll need to set this when a player is selected
@@ -368,12 +374,6 @@ class StatTracker:
         pass
 
     def dribble(self):
-        if self.current_possession is None:
-            print("No player in possession. Please select a player.")
-            self.select_player()
-            if self.current_possession is None:  # Check again after trying to select a player
-                return
-
         self.current_possession.dribbles += 1
         message = f"{self.current_possession.name} dribbled ({self.current_possession.dribbles})."
         print(message)  # You might want to update this to show the message in the GUI
