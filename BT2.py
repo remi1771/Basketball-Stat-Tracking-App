@@ -1,7 +1,9 @@
 
 import os
 import subprocess
+import keyboard
 from stats_display_tk import StatsDisplayTk
+
 
 
 class Player:
@@ -77,56 +79,77 @@ class Game:
             if self.current_possession is None:  # Check again after trying to select a player
                 return
 
-        # Present the user with a list of possible actions
-        print("Available actions:")
-        print("1. Pass")
-        print("2. Shoot 2")
-        print("3. Shoot 3")
-        print("4. Layup")
-        print("5. Turnover")
-        print("6. Dribble")
+        print("Press 'D' for Dribble")
+        print("Press 'P' for Pass")
+        print("Press '1' for Layup")
+        print("Press '2' for Shoot 2")
+        print("Press '3' for Shoot 3")
+        print("Press 'x' for Turnover")
+        print("Press 'Q' to Quit")
 
-        # Prompt the user to enter the action
-        action = input("Input the action (Pass, Shoot 2, Shoot 3, Layup, Turnover, Dribble): ")
-    
-        if action == 'Pass':
-            other_player_number = int(input("Input the number of the player who received the pass: "))
-            other_player = next((p for p in self.players if p.number == other_player_number), None)
-            if other_player is not None:
-                # Increment the count in the received_passes_from dictionary for the other player
-                other_player.received_passes_from[self.current_possession.number] = \
-                    other_player.received_passes_from.get(self.current_possession.number, 0) + 1
+        # We will use a loop to continuously check for key presses
+        while True:
+            try:
+                if keyboard.is_pressed('D'):  # If 'D' key is pressed
+                    self.current_possession.dribbles += 1
+                    print(f"{self.current_possession.name} dribbled.")
+                    break
+                
+                elif keyboard.is_pressed('P'):
+                    other_player_number = int(input("Input the number of the player who received the pass: "))
+                    other_player = next((p for p in self.players if p.number == other_player_number), None)
+                    if other_player is not None:
+                        other_player.received_passes_from[self.current_possession.number] = \
+                            other_player.received_passes_from.get(self.current_possession.number, 0) + 1
 
-                # Increment the count in the made_passes_to dictionary for the current player
-                self.current_possession.made_passes_to[other_player.number] = \
-                    self.current_possession.made_passes_to.get(other_player.number, 0) + 1
+                        # Increment the count in the made_passes_to dictionary for the current player
+                        self.current_possession.made_passes_to[other_player.number] = \
+                            self.current_possession.made_passes_to.get(other_player.number, 0) + 1
 
-                # Increment the current player's possessions and passes count
-                self.current_possession.possessions += 1
-                self.current_possession.passes += 1
-                self.current_possession.attempted_passes += 1
+                        # Increment the current player's possessions and passes count
+                        self.current_possession.possessions += 1
+                        self.current_possession.passes += 1
+                        self.current_possession.attempted_passes += 1
 
-                # Transfer possession to the other player
-                self.current_possession = other_player
+                        self.current_possession = other_player
+                    break
             
-        elif action == 'Shoot 2':
-            self.shoot_two_point_attempt(self.current_possession)
-        elif action == 'Shoot 3':
-            self.shoot_three_point_attempt(self.current_possession)
-        elif action == 'Layup':
-            self.layup_attempt(self.current_possession)
-        elif action == 'Turnover':
-            self.current_possession.turnovers += 1
-            self.turnover(self.current_possession)
-        elif action == 'Dribble':
-            self.current_possession.dribbles += 1
-        elif action.lower() == 'quit':
-            print("Game over.")
-            return 'quit'  # Return a special value to signal the end of the game
-        else:
-            print(f"Invalid action: {action}")
-        self.clear_screen()       
+                elif keyboard.is_pressed('2'):
+                    self.shoot_two_point_attempt(self.current_possession)
+                    break
+
+                elif keyboard.is_pressed('Q'):
+                    print("Game over.")
+                    return 'quit'  # Return a special value to signal the end of the game
+                    break
+                
+                elif keyboard.is_pressed('2'):
+                    self.shoot_three_point_attempt(self.current_possession)
+                    break
+                    
+                elif keyboard.is_pressed('1'):
+                    self.layup_attempt(self.current_possession)
+                    break
+                    
+                elif keyboard.is_pressed('x'):
+                    self.current_possession.turnovers += 1
+                    self.turnover(self.current_possession)
+                    break
+
+                elif keyboard.read_event():  # If any key event occurs
+                    print("Invalid action")
+                    # You can choose to break or continue based on your desired behavior
+
+
+            except Exception as e:
+                # Handle exceptions, if any
+                print(f"An error occurred: {e}")
+                break  # Break the loop if there is an error
+
+        self.clear_screen()
         self.print_stats()
+
+
 
     def select_player(self):
         print("Select a player for possession:")
