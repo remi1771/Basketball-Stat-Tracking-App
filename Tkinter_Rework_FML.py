@@ -8,38 +8,71 @@ from tkinter import messagebox
 #Classes:
 class Player:
     def __init__(self, name, team, number):
-        self.name = name
-        self.team = team
-        self.number = number
-        self.possessions = 0
-        self.dribbles = 0
+        self._name = name
+        self._team = team
+        self._number = number
+        self._possessions = 0
+        self._dribbles = 0
         
         #Passes
-        self.passes = 0
-        self.attempted_passes = 0
-        self.received_passes = 0
-        self.received_passes_from = {}
-        self.made_passes_to = {}
-        self.assists = 0
-        self.assists_made_to = {}
+        self._passes = 0
+        self._attempted_passes = 0
+        self._received_passes = 0
+        self._received_passes_from = {}
+        self._made_passes_to = {}
+        self._assists = 0
+        self._assists_made_to = {}
 
         #Shooting
-        self.points = 0
-        self.shots_made = 0
-        self.shots_attempted = 0
-        self.layups_attempts = 0
-        self.layups_makes = 0
-        self.two_point_attempts = 0
-        self.two_point_makes = 0
-        self.three_point_attempts = 0
-        self.three_point_makes = 0
+        self._points = 0
+        self._shots_made = 0
+        self._shots_attempted = 0
+        self._layups_attempts = 0
+        self._layups_makes = 0
+        self._two_point_attempts = 0
+        self._two_point_makes = 0
+        self._three_point_attempts = 0
+        self._three_point_makes = 0
         
         #Hustle and Defense
-        self.offensive_rebounds = 0
-        self.defensive_rebounds = 0
-        self.steals = 0
-        self.interceptions = 0
-        self.turnovers = 0
+        self._offensive_rebounds = 0
+        self._defensive_rebounds = 0
+        self._steals = 0
+        self._interceptions = 0
+        self._turnovers = 0
+    
+    def reset_stats(self):
+        self._possessions = 0
+        self._dribbles = 0
+        self._passes = 0
+        self._attempted_passes = 0
+        self._received_passes = 0
+        self._received_passes_from = {}
+        self._made_passes_to = {}
+        self._assists = 0
+        self._assists_made_to = {}
+        self._points = 0
+        self._shots_made = 0
+        self._shots_attempted = 0
+        self._layups_attempts = 0
+        self._layups_makes = 0
+        self._two_point_attempts = 0
+        self._two_point_makes = 0
+        self._three_point_attempts = 0
+        self._three_point_makes = 0
+        self._offensive_rebounds = 0
+        self._defensive_rebounds = 0
+        self._steals = 0
+        self._interceptions = 0
+        self._turnovers = 0
+    
+    def __str__(self):
+        return f"Player: {self._name}, Team: {self._team}, Number: {self._number}"
+    
+    def __eq__(self, other):
+        if isinstance(other, Player):
+            return self.__dict__ == other.__dict__
+        return False
 
 #I'm thinking of removing the class team alltogether, is it REALLY necessary?
 #I mean, you can just get the stats calculated by hand, and it might make it so that you can't track stats on 1v1v1 or other weird mode that requires more than 2 teams.
@@ -51,6 +84,7 @@ class Team:
         self.name = name
         self.possessions = {}
         self.total_points = 0
+        self.total_rebounds = 0
         
 class Game:
     def __init__(self):

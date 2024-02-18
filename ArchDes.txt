@@ -2,7 +2,7 @@
     last_action = {}
     action_history = {} # Hay una funcion que tiene que funcar como reloj despues de cada acción ponele que actualice algunas cosas, entre otras, esta
 
-}=====Screen 1======
+=====Screen 1======
     New Game // Load
 
 ======Screen 2======
