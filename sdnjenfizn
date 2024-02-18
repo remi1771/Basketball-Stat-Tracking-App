@@ -1,130 +1,85 @@
-Screen 1
-New Game / Load
+=class game
+    last_action = {}
+    action_history = {} # Hay una funcion que tiene que funcar como reloj despues de cada acción ponele que actualice algunas cosas, entre otras, esta
 
-Screen 2
-Input players (Name, Number, Team)
+}=====Screen 1======
+    New Game // Load
 
-Screen 2.a
-Which player has posession? Select player
+======Screen 2======
+    Input players   (Name,       Number,        Team)
+                    Text field,  Number field,  Dropdown
+    Button="Done" -> Go to Screen 3
 
-Screen 3
-Text: Variable called action which says what the last action was
-Dribble, Pass=Goto 4, Shoot=Goto 5, Turnover=Goto 6, Foul= Goto 7
-Save
+======Screen 3======
+    Text="Which player has posession?"
+    Select player (Dropdown) -> Go to screen 4  {game.current_player_possession}
+    Button="Done"??
 
-Screen 4 - Pass
-To who was the pass?
-Goto 3
+======Screen 4 (Main)======
+    Text: "The last action was:" {def(message)}. 
+    Input text -> codified message quizas hacer un def(coded_action)
+    game.last_action = Dribble, Pass=Goto 5, Shoot=Goto 6, Turnover=Goto 7, Foul= Goto 8
+    Save
 
-Screen 5 - Shoot
-Which type of shot was it? (Layup, 2pts, 3pts)
-Contested? (Wide Open, Open, Semi Contested, Contested, Heavy Contested, Blocked=Goto 5.b)
-Did it go in? (Yes, No=Goto 5.b)
-Was it assisted? (Yes=Goto 5.a, No)
-Goto 2
+def message(message)
+    if last_action == Shoot:
+        if contested_type == Blocked:
+            message=print(f'{game.blocking_player} {game.shot_type} {game.last_player_possession}'s {game.shot_type} attempt') 
+        elif assist_type == Null:
+            message=print(f'{game.last_player_possession} {game.shot_made} "a" {game.contested_type} {game.shot_type}'):
+        else:
+            message=print(f'{game.last_player_possession} {game.shot_made} "a" {game.contested_type} {game.shot_type}. Assist by {game.assisting_player}'):
 
-Screen 5.a - Assisted
-Which player did the assist?
-2
+    elif last_action == Pass:
+        message=print(f'{game.last_player_possession} passed to {current_player_possession}')
 
-Screen 5.b - Rebound
-Who got the rebound?//if defensive player then add +1 to def rebounds and change posession, else +1 off rebound to player
-Goto 3
+    elif last_action == Turnover:
+        if game.steal == True
+            message=print(f'{game.current_player_possession} stole the ball from {game.last_player_possession}')
+        message=print(f'{game.last_player_possession} turnover the ball bc he's a fucking retard')
+    else message = The game has started!
 
-Screen 6 - Turnover
-Steal interception or other? //select player who stole or intercepted
-Goto 3
+def messagev2(message)
+    if message == 1:  #Fue bloqueado
+        message=print(f'{game.blocking_player} {game.shot_type} {game.last_player_possession}'s {game.shot_type} attempt') 
+    elif message == 2: #Tiro no bloqueado
+        message=print(f'{game.last_player_possession} {game.shot_made} "a" {game.contested_type} {game.shot_type}'):
+    elif == 3:
+        message=print(f'{game.last_player_possession} {game.shot_made} "a" {game.contested_type} {game.shot_type}. Assist by {game.assisting_player}'):
+    elif == 4:
+        message=print(f'{game.last_player_possession} passed to {current_player_possession}')
+    elif == 5:
+        message=print(f'{game.current_player_possession} stole the ball from {game.last_player_possession}')
+    elif == 6:
+        message=print(f'{game.last_player_possession} turnover the ball bc he's a fucking retard')
+    elif == 0:
+        message = The game has started!
 
-Screen 7 - Foul
-Who made the foul? //if offensive player then add +1 to fouls and turnovers, change possession to none; else +1 def foul
-Goto 2
+=====Screen 5 (Pass)=====
+    To who was the pass? -> calculate stats n stuff
+    Goto 3
+
+=====Screen 6 - Shoot=====
+    shot_type(layup, three pointer, two pointer) = <<<Which type of shot was it? (Layup, 2pts, 3pts)>>>
+    contested_type = <<<Contested? (Wide Open, Open, Semi Contested, Contested, Heavy Contested, Blocked=Goto 8)>>>
+    shot_made(made, missed)= <<<Did it go in? (Yes, No=Goto 8)>>>
+    assist_type= <<<Was it assisted? (Yes=Goto 7 No)>>>
+    Goto 2
+
+=====Screen 7 (Assisted)=====
+    Which player did the assist?
+    Goto 2
+
+=====Screen 8 (Rebound)=====
+    Who got the rebound?//if defensive player then add +1 to def rebounds and change posession, else +1 off rebound to player
+    Goto 3
+
+=====Screen 9 (Turnover)=====
+    Steal interception or other? //select player who stole or intercepted
+    Goto 3
+
+=====Screen 9 (Foul)=====
+    Who made the foul? //if offensive player then add +1 to fouls and turnovers, change possession to none; else +1 def foul
+    Goto 2
 
 
-
-Below is a simplified version of the functionality you've described, implemented using Python's tkinter library.
-This is a high-level representation and does not include all the detailed logic you might require, such as updating player statistics or saving the game state. 
-Also, for simplicity, I'm using a single window and updating its contents, rather than creating separate screens.
-
-import tkinter as tk
-from tkinter import simpledialog
-
-# Create a root window
-root = tk.Tk()
-root.title("Basketball Game Tracker")
-
-# Global variables to hold game state
-players = []
-current_player = None
-action = ""
-
-def new_game():
-    global players
-    players = []
-    screen2()
-
-def load_game():
-    # This function should include code to load an existing game state
-    pass
-
-def screen2():
-    global current_player
-    current_player = simpledialog.askstring("Input", "Enter player's Name, Number, Team")
-    screen2a()
-
-def screen2a():
-    # This function should let the user select which player has possession
-    pass
-
-def screen3():
-    global action
-    # Update the main text with the last action
-    action_label.config(text=action)
-    # Show options for the next action
-    for button in action_buttons:
-        button.pack(pady=5)
-
-def screen4():
-    # Handle a pass action
-    pass_to_player = simpledialog.askstring("Pass", "To whom was the pass?")
-    screen3()
-
-def screen5():
-    # Handle a shot action
-    shot_type = simpledialog.askstring("Shoot", "Which type of shot was it? (Layup, 2pts, 3pts)")
-    contested = simpledialog.askstring("Shoot", "Was it contested?")
-    made_shot = simpledialog.askstring("Shoot", "Did it go in?")
-    assisted = simpledialog.askstring("Shoot", "Was it assisted?")
-    screen2()
-
-def screen6():
-    # Handle a turnover action
-    turnover_type = simpledialog.askstring("Turnover", "Steal interception or other?")
-    screen3()
-
-def screen7():
-    # Handle a foul action
-    foul_player = simpledialog.askstring("Foul", "Who made the foul?")
-    screen2()
-
-# Initial screen with New Game and Load buttons
-new_game_button = tk.Button(root, text="New Game", command=new_game)
-new_game_button.pack(pady=20)
-
-load_game_button = tk.Button(root, text="Load Game", command=load_game)
-load_game_button.pack(pady=20)
-
-# Main text label for actions
-action_label = tk.Label(root, text="")
-action_label.pack(pady=20)
-
-# Action buttons
-action_buttons = [
-    tk.Button(root, text="Dribble", command=lambda: screen3()),
-    tk.Button(root, text="Pass", command=lambda: screen4()),
-    tk.Button(root, text="Shoot", command=lambda: screen5()),
-    tk.Button(root, text="Turnover", command=lambda: screen6()),
-    tk.Button(root, text="Foul", command=lambda: screen7()),
-    tk.Button(root, text="Save", command=lambda: None)  # Save function should be implemented
-]
-
-root.mainloop()
