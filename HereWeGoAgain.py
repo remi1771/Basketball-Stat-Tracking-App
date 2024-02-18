@@ -87,21 +87,21 @@ def show_screen_2():
     player_name_label = tk.Label(window, text="Player Name:")
     player_name_label.grid(row=0, column=0)
     player_name_entry = tk.Entry(window)
-    player_name_entry.grid(columnspan=1, row=0, column=1)
+    player_name_entry.grid(row=1, column=0)
 
     # Player number entry
     player_number_label = tk.Label(window, text="Number:")
     player_number_label.grid(row=0, column=2)
     player_number_entry = tk.Entry(window)
-    player_number_entry.grid(row=0, column=3)
+    player_number_entry.grid(row=1, column=2)
 
     # Team selection dropdown
-    team_label = tk.Label(window, text="Team:")
+    team_label = tk.Label(window)
     team_label.grid(row=1, column=1)
     team_var = tk.StringVar(window)
     team_var.set("Select Team")  # default value
     team_dropdown = tk.OptionMenu(window, team_var, "Team 1", "Team 2")  # Add your teams here
-    team_dropdown.grid(row=1, column=2)
+    team_dropdown.grid(row=1, column=1)
 
     # Add Player button
     def add_player():
@@ -124,20 +124,20 @@ def show_screen_2():
         player_number_entry.delete(0, 'end')
         team_var.set("Select Team")
 
-    # Add Player button
-    add_player_button = tk.Button(window, text="Add Player", command=add_player)
-    add_player_button.grid(row=3, column=3)
-
     # Inside show_screen_2 function
     save_button = tk.Button(window, text="Save Players", command=save_players)
-    save_button.grid(row=3, column=1)
+    save_button.grid(row=3, column=0)
 
     load_button = tk.Button(window, text="Load Players", command=load_players)
-    load_button.grid(row=3, column=2)
+    load_button.grid(row=3, column=1)
+
+    # Add Player button
+    add_player_button = tk.Button(window, text="Add Player", command=add_player)
+    add_player_button.grid(row=3, column=2)
 
     # To Match button
     to_match_button = tk.Button(window, text="To Match!", command=show_screen_3)  # You need to define show_screen_3
-    to_match_button.grid(row=4, column=2)
+    to_match_button.grid(row=4, column=1)
 
     # Update the list of available players
     game.update_player_list()
