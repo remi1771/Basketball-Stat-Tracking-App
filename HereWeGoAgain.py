@@ -1,4 +1,5 @@
 #Fuck My Life it's clear that I can't do cmd AND tkinter at the same time because i'm a shitty af programmer, so everything on tkinter it is which fucking sucks honestly because i'm not quite sure that tkinter has a getkey() functionality or something but oh well
+#This is it boys
 
 import tkinter as tk
 import pickle
