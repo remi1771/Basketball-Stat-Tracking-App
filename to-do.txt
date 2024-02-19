@@ -1,0 +1,8 @@
+Check that, when adding player, there is a name and a number else raise error.
+
+def add_player(name, number):
+    if name and number:
+        return True
+    else:
+        raise ValueError("Name and number must be provided.")
+

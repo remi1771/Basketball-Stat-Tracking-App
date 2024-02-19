@@ -25,6 +25,8 @@ def load_players():
     with open('players.pkl', 'rb') as input:
         game.players = pickle.load(input)
     game.update_player_list()
+    show_screen_2()
+
 
 # Function to clear the window
 def clear_window():
@@ -100,6 +102,7 @@ def show_main_menu():
     clear_window()
     tk.Button(window, text="New Game", command=show_screen_2).pack()
     tk.Button(window, text="Load", command=load_file).pack()
+    
 #=======Screen 2 (Select Players)=======#
 def show_screen_2():
     """
@@ -107,7 +110,39 @@ def show_screen_2():
     Provides a button to add the player to the game and updates the list of available players.
     """
     clear_window()
-    
+
+    def start_match():
+        selected_player_name = player_var.get()
+        for player in game.players:
+            if player._name == selected_player_name:
+                game.current_possession = player
+                print(game.current_possession)
+                break
+        show_screen_3()
+    def add_player():
+        """
+        Retrieves the player's name, number, and team from the input fields.
+        Creates a new Player object with the retrieved information.
+        Adds the player to the game.
+        Clears the input fields and resets the team dropdown to its default value.
+        Updates the list of available players.
+        """
+        player_name = player_name_entry.get()
+        player_number = player_number_entry.get()
+        team = team_var.get()
+        player = Player(player_name, team, player_number)
+        game.add_player(player)
+        print(f"Added player {player_name} with number {player_number} to {team}")
+
+        # Clear the input fields
+        player_name_entry.delete(0, 'end')
+        player_number_entry.delete(0, 'end')
+        team_var.set("Select Team")
+
+        # Update the list of available players
+        game.update_player_list()
+        show_screen_2()
+
     # Create a label to display the available players
     global player_list_label
     player_list_label = tk.Label(window)
@@ -133,80 +168,37 @@ def show_screen_2():
     team_dropdown = tk.OptionMenu(window, team_var, "Team 1", "Team 2")  # Add your teams here
     team_dropdown.grid(row=2, column=1)
 
-    # Add Player button
-    def add_player():
-        """
-        Retrieves the player's name, number, and team from the input fields.
-        Creates a new Player object with the retrieved information.
-        Adds the player to the game.
-        Clears the input fields and resets the team dropdown to its default value.
-        Updates the list of available players.
-        """
-        player_name = player_name_entry.get()
-        player_number = player_number_entry.get()
-        team = team_var.get()
-        player = Player(player_name, team, player_number)
-        game.add_player(player)
-        print(f"Added player {player_name} with number {player_number} to {team}")
-
-        # Clear the input fields
-        player_name_entry.delete(0, 'end')
-        player_number_entry.delete(0, 'end')
-        team_var.set("Select Team")
-
-        # Update the list of available players
-        game.update_player_list()
-
-    # Inside show_screen_2 function
+    #Save and Load Buttons
     save_button = tk.Button(window, text="Save Players", command=save_players)
     save_button.grid(row=4, column=0)
 
     load_button = tk.Button(window, text="Load Players", command=load_players)
     load_button.grid(row=5, column=0)
     
-
     # Add Player button
     add_player_button = tk.Button(window, text="Add Player", command=add_player)
     add_player_button.grid(row=4, column=1)
 
-    # To Match button
-    to_match_button = tk.Button(window, text="Start Match!", command=show_screen_3)  # You need to define show_screen_3
-    to_match_button.grid(row=5, column=1)
-
-    # Update the list of available players
-    game.update_player_list()
-
-#=======Screen 3 (Pre-Game)=======#
-def show_screen_3():
-    clear_window()
-
-    # Create a label for the dropdown
+    # Initial posession player dropdown
     select_label = tk.Label(window, text="Select initial player possession:")
-    select_label.pack()
+    select_label.grid(row=6, column=0)
 
-    # Create a dropdown menu with player options
     player_var = tk.StringVar(window)
     player_var.set("Select Player")  # default value
     player_names = [player._name for player in game.players]
     player_dropdown = tk.OptionMenu(window, player_var, *player_names)
-    player_dropdown.pack()
-
-    # Define the function to start the match and go to screen 4
-    def start_match():
-        selected_player_name = player_var.get()
-        for player in game.players:
-            if player._name == selected_player_name:
-                game.current_possession = player
-                print(game.current_possession)
-                break
-        show_screen_4()  # You need to define show_screen_4
-
-    # Create a "Start Match!" button
-    start_button = tk.Button(window, text="Start Match!", command=start_match)
-    start_button.pack()
+    player_dropdown.grid(row=6, column=1)
     
-#=======Screen 4 (Main)=======#
-def show_screen_4():
+    #"Start Match!" button
+    start_button = tk.Button(window, text="Start Match!", command=start_match)
+    start_button.grid(row=8, column=0)
+
+    # Update the list of available players
+    game.update_player_list()
+
+
+#=======Screen 3 (Main)=======#
+def show_screen_3():
     global last_action_label
     clear_window()
 
