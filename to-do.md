@@ -4,4 +4,6 @@
 
 ~Check when start_match is pressed, that a player has posession, else raise error~
 
-Also normalize tkinter windoW to always be 512 by 512
+~Also normalize tkinter windoW to always be 512 by 512~
+
+Error Handling: Check for duplicate players
