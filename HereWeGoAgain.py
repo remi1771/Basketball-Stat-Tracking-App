@@ -97,52 +97,59 @@ class Game:
 
 game = Game()
 
-#=======Screen 1 (Create or Load a game)=======#
+#region ====Screen 1 (Create or Load a game)====
 def show_main_menu():
     clear_window()
     tk.Button(window, text="New Game", command=show_screen_2).pack()
     tk.Button(window, text="Load", command=load_file).pack()
-    
-#=======Screen 2 (Select Players)=======#
+#endregion
+  
+#region ====Screen 2 (Select Players)====
 def show_screen_2():
-    """
-    Displays a screen where the user can input player information, such as name, number, and team.
-    Provides a button to add the player to the game and updates the list of available players.
-    """
+
     clear_window()
 
     def start_match():
-        selected_player_name = player_var.get()
-        for player in game.players:
-            if player._name == selected_player_name:
-                game.current_possession = player
-                print(game.current_possession)
-                break
-        show_screen_3()
+        try:
+            team1_players = [player for player in game.players if player._team == "Team 1"]
+            team2_players = [player for player in game.players if player._team == "Team 2"]
+            if len(team1_players) < 2 or len(team2_players) < 2:
+                raise ValueError("There must be at least two players on each team.")
+            if not game.current_possession:
+                raise ValueError("A player must have possession before starting the match.")
+            selected_player_name = player_var.get()
+            for player in game.players:
+                if player._name == selected_player_name:
+                    game.current_possession = player
+                    print(game.current_possession)
+                    break
+            show_screen_3()
+        except ValueError as e:
+            messagebox.showerror("Error", str(e))
+              
     def add_player():
-        """
-        Retrieves the player's name, number, and team from the input fields.
-        Creates a new Player object with the retrieved information.
-        Adds the player to the game.
-        Clears the input fields and resets the team dropdown to its default value.
-        Updates the list of available players.
-        """
-        player_name = player_name_entry.get()
-        player_number = player_number_entry.get()
-        team = team_var.get()
-        player = Player(player_name, team, player_number)
-        game.add_player(player)
-        print(f"Added player {player_name} with number {player_number} to {team}")
+        try:
+            player_name = player_name_entry.get()
+            player_number = player_number_entry.get()
+            team = team_var.get()
+            if not player_name or not player_number:
+                raise ValueError("Both player name and number must be provided.")
+            player = Player(player_name, team, player_number)
+            game.add_player(player)
+            print(f"Added player {player_name} with number {player_number} to {team}")
 
-        # Clear the input fields
-        player_name_entry.delete(0, 'end')
-        player_number_entry.delete(0, 'end')
-        team_var.set("Select Team")
+            # Clear the input fields
+            player_name_entry.delete(0, 'end')
+            player_number_entry.delete(0, 'end')
+            team_var.set("Select Team")
 
-        # Update the list of available players
-        game.update_player_list()
-        show_screen_2()
+            # Update the list of available players
+            game.update_player_list()
+            show_screen_2()
+        except ValueError as e:
+            messagebox.showerror("Error", str(e))
 
+    #region Buttons
     # Create a label to display the available players
     global player_list_label
     player_list_label = tk.Label(window)
@@ -164,7 +171,7 @@ def show_screen_2():
     team_label = tk.Label(window)
     team_label.grid(row=2, column=1)
     team_var = tk.StringVar(window)
-    team_var.set("Select Team")  # default value
+    team_var.set("Team 1")  # default value
     team_dropdown = tk.OptionMenu(window, team_var, "Team 1", "Team 2")  # Add your teams here
     team_dropdown.grid(row=2, column=1)
 
@@ -174,7 +181,7 @@ def show_screen_2():
 
     load_button = tk.Button(window, text="Load Players", command=load_players)
     load_button.grid(row=5, column=0)
-    
+
     # Add Player button
     add_player_button = tk.Button(window, text="Add Player", command=add_player)
     add_player_button.grid(row=4, column=1)
@@ -192,12 +199,13 @@ def show_screen_2():
     #"Start Match!" button
     start_button = tk.Button(window, text="Start Match!", command=start_match)
     start_button.grid(row=8, column=0)
+    #endregion
 
     # Update the list of available players
     game.update_player_list()
+#endregion
 
-
-#=======Screen 3 (Main)=======#
+#region ====Screen 3 (Main)====
 def show_screen_3():
     global last_action_label
     clear_window()
@@ -233,6 +241,8 @@ def show_screen_3():
 
     foul_button = tk.Button(window, text="Foul", command=show_screen_foul)  # You need to define show_screen_foul
     foul_button.grid(row=7, column=0)
+#endregion
+
 
 #=======Screen 5 (Pass)=======#
 def show_screen_pass():
