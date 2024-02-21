@@ -7,16 +7,19 @@ from tkinter import filedialog
 from tkinter import messagebox
 
 #Variables!
-window = tk.Tk()  # Create the main window
-window.title("Stat Tracking App")
+mainwindow1 = tk.Tk()  # Create the main mainwindow1
+mainwindow1.geometry("512x512")
+mainwindow1.maxsize(512, 512)
 
-player_list_label = tk.Label(window) # Create a label to display the available players
-player_list_label.pack()
+mainwindow1.title("Basketball Stat Tracking App by Remi1771")
+
+player_list = tk.Label(mainwindow1) # Create a label to display the available players
+
 
 last_action_label = None
 
 
-#Functions!
+#region Functions!
 def save_players():
     with open('players.pkl', 'wb') as output:
         pickle.dump(game.players, output, pickle.HIGHEST_PROTOCOL)
@@ -28,9 +31,9 @@ def load_players():
     show_screen_2()
 
 
-# Function to clear the window
+# Function to clear the mainwindow1
 def clear_window():
-    for widget in window.winfo_children():
+    for widget in mainwindow1.winfo_children():
         widget.destroy()
 
 # Function to load a file PLACEHOLDER
@@ -43,8 +46,9 @@ def save_game():
 
 def input_action_code():
     pass
+#endregion
 
-#Classes:
+#region Classes:
 class Player:
     def __init__(self, name, team, number):
         self._name = name
@@ -91,17 +95,19 @@ class Game:
         self.players.append(player)
 
     def update_player_list(self):
-        global player_list_label
+        global player_list
         player_info = [f"{player._name}({player._number}, {player._team})" for player in self.players]
-        player_list_label.config(text="Available players: " + ", ".join(player_info)) 
-
+        player_list.config(text=", ".join(player_info))
+        player_list
+#endregion
+        
 game = Game()
 
 #region ====Screen 1 (Create or Load a game)====
 def show_main_menu():
     clear_window()
-    tk.Button(window, text="New Game", command=show_screen_2).pack()
-    tk.Button(window, text="Load", command=load_file).pack()
+    tk.Button(mainwindow1, text="New Game", command=show_screen_2).pack()
+    tk.Button(mainwindow1, text="Load", command=load_file).pack()
 #endregion
   
 #region ====Screen 2 (Select Players)====
@@ -151,53 +157,55 @@ def show_screen_2():
 
     #region Buttons
     # Create a label to display the available players
-    global player_list_label
-    player_list_label = tk.Label(window)
-    player_list_label.grid(row=0, column=0)
+    global player_list
+    player_list_label_label = tk.Label(mainwindow1, text="Players Available")
+    player_list_label_label.grid(row=0, column=0)
+    player_list = tk.Label(mainwindow1)
+    player_list.grid(row=0, column=1)
 
     # Player name entry
-    player_name_label = tk.Label(window, text="Player Name:")
+    player_name_label = tk.Label(mainwindow1, text="Player Name:")
     player_name_label.grid(row=1, column=0)
-    player_name_entry = tk.Entry(window)
+    player_name_entry = tk.Entry(mainwindow1)
     player_name_entry.grid(row=2, column=0)
 
     # Player number entry
-    player_number_label = tk.Label(window, text="Number:")
+    player_number_label = tk.Label(mainwindow1, text="Number:")
     player_number_label.grid(row=1, column=2)
-    player_number_entry = tk.Entry(window)
+    player_number_entry = tk.Entry(mainwindow1)
     player_number_entry.grid(row=2, column=2)
 
     # Team selection dropdown
-    team_label = tk.Label(window)
+    team_label = tk.Label(mainwindow1)
     team_label.grid(row=2, column=1)
-    team_var = tk.StringVar(window)
+    team_var = tk.StringVar(mainwindow1)
     team_var.set("Team 1")  # default value
-    team_dropdown = tk.OptionMenu(window, team_var, "Team 1", "Team 2")  # Add your teams here
+    team_dropdown = tk.OptionMenu(mainwindow1, team_var, "Team 1", "Team 2")  # Add your teams here
     team_dropdown.grid(row=2, column=1)
 
     #Save and Load Buttons
-    save_button = tk.Button(window, text="Save Players", command=save_players)
+    save_button = tk.Button(mainwindow1, text="Save Players", command=save_players)
     save_button.grid(row=4, column=0)
 
-    load_button = tk.Button(window, text="Load Players", command=load_players)
+    load_button = tk.Button(mainwindow1, text="Load Players", command=load_players)
     load_button.grid(row=5, column=0)
 
     # Add Player button
-    add_player_button = tk.Button(window, text="Add Player", command=add_player)
+    add_player_button = tk.Button(mainwindow1, text="Add Player", command=add_player)
     add_player_button.grid(row=4, column=1)
 
     # Initial posession player dropdown
-    select_label = tk.Label(window, text="Select initial player possession:")
+    select_label = tk.Label(mainwindow1, text="Select initial player possession:")
     select_label.grid(row=6, column=0)
 
-    player_var = tk.StringVar(window)
+    player_var = tk.StringVar(mainwindow1)
     player_var.set("Select Player")  # default value
     player_names = [player._name for player in game.players]
-    player_dropdown = tk.OptionMenu(window, player_var, *player_names)
+    player_dropdown = tk.OptionMenu(mainwindow1, player_var, *player_names)
     player_dropdown.grid(row=6, column=1)
     
     #"Start Match!" button
-    start_button = tk.Button(window, text="Start Match!", command=start_match)
+    start_button = tk.Button(mainwindow1, text="Start Match!", command=start_match)
     start_button.grid(row=8, column=0)
     #endregion
 
@@ -211,35 +219,35 @@ def show_screen_3():
     clear_window()
 
     # Create a label to display the current player in possession
-    current_player_label = tk.Label(window, text=f"Current player in possession: {game.current_possession._name}")
+    current_player_label = tk.Label(mainwindow1, text=f"Current player in possession: {game.current_possession._name}")
     current_player_label.grid(row=0, column=0)
 
     # Create a label to display the last action
-    last_action_label = tk.Label(window, text=f"{game.message}")
+    last_action_label = tk.Label(mainwindow1, text=f"{game.message}")
     last_action_label.grid(row=1, column=0)
 
     # Create a text entry for the action code
-    action_code_entry = tk.Entry(window)
+    action_code_entry = tk.Entry(mainwindow1)
     action_code_entry.grid(row=2, column=0)
 
     # Create a button to input the action code
-    input_action_button = tk.Button(window, text="Input Action Code", command=input_action_code)  # You need to define input_action_code
+    input_action_button = tk.Button(mainwindow1, text="Input Action Code", command=input_action_code)  # You need to define input_action_code
     input_action_button.grid(row=2, column=1)
 
     # Create buttons for different actions
-    dribble_button = tk.Button(window, text="Dribble", command=game.dribble)  # You need to define dribble
+    dribble_button = tk.Button(mainwindow1, text="Dribble", command=game.dribble)  # You need to define dribble
     dribble_button.grid(row=3, column=0)
 
-    pass_button = tk.Button(window, text="Pass", command=show_screen_pass)  # You need to define show_screen_pass
+    pass_button = tk.Button(mainwindow1, text="Pass", command=show_screen_pass)  # You need to define show_screen_pass
     pass_button.grid(row=4, column=0)
 
-    shoot_button = tk.Button(window, text="Shoot", command=show_screen_shot)  # You need to define show_screen_shoot
+    shoot_button = tk.Button(mainwindow1, text="Shoot", command=show_screen_shot)  # You need to define show_screen_shoot
     shoot_button.grid(row=5, column=0)
 
-    turnover_button = tk.Button(window, text="Turnover", command=show_screen_turnover)  # You need to define show_screen_turnover
+    turnover_button = tk.Button(mainwindow1, text="Turnover", command=show_screen_turnover)  # You need to define show_screen_turnover
     turnover_button.grid(row=6, column=0)
 
-    foul_button = tk.Button(window, text="Foul", command=show_screen_foul)  # You need to define show_screen_foul
+    foul_button = tk.Button(mainwindow1, text="Foul", command=show_screen_foul)  # You need to define show_screen_foul
     foul_button.grid(row=7, column=0)
 #endregion
 
@@ -267,7 +275,6 @@ def show_screen_foul():
 show_main_menu()
 
 # Run the application
-window.mainloop()
-
+mainwindow1.mainloop()
 
 
