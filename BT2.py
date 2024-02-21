@@ -2,7 +2,7 @@
 import os
 import subprocess
 import keyboard
-from stats_display_tk import StatsDisplayTk
+from GUItests import StatsDisplayTk
 
 class Player:
     def __init__(self, name, team, number):

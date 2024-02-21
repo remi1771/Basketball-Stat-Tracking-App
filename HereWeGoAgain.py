@@ -21,8 +21,11 @@ last_action_label = None
 
 #region Functions!
 def save_players():
-    with open('players.pkl', 'wb') as output:
-        pickle.dump(game.players, output, pickle.HIGHEST_PROTOCOL)
+    try:
+        with open('players.pkl', 'wb') as output:
+            pickle.dump(game.players, output, pickle.HIGHEST_PROTOCOL)
+    except Exception as e:
+        messagebox.showerror("Error", str(e))
 
 def load_players():
     with open('players.pkl', 'rb') as input:
@@ -105,14 +108,16 @@ game = Game()
 
 #region ====Screen 1 (Create or Load a game)====
 def show_main_menu():
-    clear_window()
-    tk.Button(mainwindow1, text="New Game", command=show_screen_2).pack()
-    tk.Button(mainwindow1, text="Load", command=load_file).pack()
+    try:
+        clear_window()
+        tk.Button(mainwindow1, text="New Game", command=show_screen_2).pack()
+        tk.Button(mainwindow1, text="Load", command=load_file).pack()
+    except Exception as e:
+        messagebox.showerror("Error", str(e))
 #endregion
   
 #region ====Screen 2 (Select Players)====
 def show_screen_2():
-
     clear_window()
 
     def start_match():
@@ -159,9 +164,9 @@ def show_screen_2():
     # Create a label to display the available players
     global player_list
     player_list_label_label = tk.Label(mainwindow1, text="Players Available")
-    player_list_label_label.grid(row=0, column=0)
+    player_list_label_label.grid(row=7, column=0)
     player_list = tk.Label(mainwindow1)
-    player_list.grid(row=0, column=1)
+    player_list.grid(row=7, column=1)
 
     # Player name entry
     player_name_label = tk.Label(mainwindow1, text="Player Name:")
@@ -212,6 +217,29 @@ def show_screen_2():
     # Update the list of available players
     game.update_player_list()
 #endregion
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #region ====Screen 3 (Main)====
 def show_screen_3():
