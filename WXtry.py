@@ -8,19 +8,11 @@ import wx
 import tkinter as tk
 from tkinter import filedialog
 from tkinter import messagebox
+from easyButtons import * #because fuck you, that's why no need to do shit complicated
+#I SPENT SO MUCH FUCKING TIME ON CREATING EASYBUTTONS BUT NOW IT WORKS FUCK YEAAAAAA
 
-#Variables!
-mainwindow1 = tk.Tk()  # Create the main mainwindow1
-mainwindow1.geometry("512x512")
-mainwindow1.maxsize(512, 512)
-
-mainwindow1.title("Basketball Stat Tracking App by Remi1771")
-
-player_list = tk.Label(mainwindow1) # Create a label to display the available players
-
-
-last_action_label = None
-
+#region Variables!
+#endregion
 
 #region Functions!
 def save_players():
@@ -56,29 +48,39 @@ def input_action_code():
 
 #region Classes:
 
+
 class MainFrame(wx.Frame):
     def __init__(self, parent):
-        wx.Frame.__init__(self, parent, title = "Basketball Stat Tracking App by Remi1771", pos = wx.DefaultPosition, size = wx.Size(512,218))
-                
-        Sizer = wx.GridBagSizer(1, 10)
+        wx.Frame.__init__(self, parent, title = "Basketball Stat Tracking App by Remi1771", size = wx.Size(512,218))
         
-        bitmap = wx.Bitmap('path_to_your_icon_file')
-        self.new_game_button = wx.Button(self, wx.ID_ANY, "New Game", wx.DefaultPosition, wx.DefaultSize, 0)
-        Sizer.Add(self.new_game_button, pos=wx.GBPosition(0, 0))
+        self.Sizer = wx.GridBagSizer(1,10)  # Create a sizer
         
-        self.load_button = wx.Button(self, wx.ID_ANY, "Load", wx.DefaultPosition, wx.DefaultSize, 0)
-        Sizer.Add(self.load_button, pos=wx.GBPosition(1, 0))
-        
-        self.SetSizer(Sizer)
-        self.Layout()
-        
-        self.Centre(wx.BOTH)
+        LOAD_ICON = wx.Bitmap('FILE_OPEN.ICO')
+        self.load_button = wx.BitmapButton(self, bitmap=LOAD_ICON, style=0)
+        self.load_button.SetToolTip("LOAD FILE")
+        self.Sizer.Add(self.load_button, pos=wx.GBPosition(0, 0))
+        self.load_button.Bind(wx.EVT_BUTTON, self.LOAD_FILE)  # Bind the button click event to the load_file method
+
+        EasyButton(self, 'FILE_SAVE', 0, 1)
+        EasyButton(self, 'PLAYERS', 0, 2)
+
+
+
+
+
+        self.SetSizer(self.Sizer)
+        self.Layout() #This line asks the window to re-layout its components.
+        self.Centre(wx.BOTH) #centers the window on the screen
 
     def show_screen_2(self, event):
         pass
-
-    def load_file(self, event):
+    def PLAYERS(self,event):
+        print("Players :D")
+    def LOAD_FILE(self, event):
+        print("load file :D")
+    def FILE_SAVE(self, event):
         pass
+
 
 
 
