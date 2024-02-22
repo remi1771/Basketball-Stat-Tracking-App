@@ -15,3 +15,6 @@ class EasyButton:
         Sizer = self.parent.GetSizer()
         Sizer.Add(self.button, pos=wx.GBPosition(self.vpos, self.hpos))
         self.button.Bind(wx.EVT_BUTTON, getattr(self.parent, self.name))
+
+
+#finally
