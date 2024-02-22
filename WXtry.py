@@ -13,37 +13,7 @@ from easyButtons import * #because fuck you, that's why no need to do shit compl
 #region Variables!
 #endregion
 
-#region Functions!
-def save_players():
-    try:
-        with open('players.pkl', 'wb') as output:
-            pickle.dump(game.players, output, pickle.HIGHEST_PROTOCOL)
-    except Exception as e:
-        messagebox.showerror("Error", str(e))
 
-def load_players():
-    with open('players.pkl', 'rb') as input:
-        game.players = pickle.load(input)
-    game.update_player_list()
-    show_screen_2()
-
-
-# Function to clear the mainwindow1
-def clear_window():
-    for widget in mainwindow1.winfo_children():
-        widget.destroy()
-
-# Function to load a file PLACEHOLDER
-def load_file():
-    pass
-
-# Function to save the game PLACEHOLDER
-def save_game():
-    pass
-
-def input_action_code():
-    pass
-#endregion
 
 #region Classes:
 
@@ -53,30 +23,28 @@ class MainFrame(wx.Frame):
         wx.Frame.__init__(self, parent, title = "Basketball Stat Tracking App by Remi1771", size = wx.Size(512,218))
         
         self.Sizer = wx.GridBagSizer(1,10)  # Create a sizer
-        
+        '''
         LOAD_ICON = wx.Bitmap('FILE_OPEN.ICO')
         self.load_button = wx.BitmapButton(self, bitmap=LOAD_ICON, style=0)
         self.load_button.SetToolTip("LOAD FILE")
         self.Sizer.Add(self.load_button, pos=wx.GBPosition(0, 0))
         self.load_button.Bind(wx.EVT_BUTTON, self.LOAD_FILE)  # Bind the button click event to the load_file method
-
+'''
+        EasyButton(self, 'FILE_LOAD', 0, 0)
         EasyButton(self, 'FILE_SAVE', 0, 1)
         EasyButton(self, 'PLAYERS', 0, 2)
-
-
-
-
 
         self.SetSizer(self.Sizer)
         self.Layout() #This line asks the window to re-layout its components.
         self.Centre(wx.BOTH) #centers the window on the screen
 
-    def show_screen_2(self, event):
-        pass
+
     def PLAYERS(self,event):
         print("Players :D")
-    def LOAD_FILE(self, event):
+
+    def FILE_LOAD(self, event):
         print("load file :D")
+
     def FILE_SAVE(self, event):
         pass
 
