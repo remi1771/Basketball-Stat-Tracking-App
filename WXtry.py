@@ -58,25 +58,27 @@ def input_action_code():
 
 class MainFrame(wx.Frame):
     def __init__(self, parent):
-        wx.Frame.__init__(self, parent, id = wx.ID_ANY, title = "Basketball Stat Tracking App by Remi1771", pos = wx.DefaultPosition, size = wx.Size(512,512), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL)
-        self.SetSizeHints(wx.DefaultSize, wx.DefaultSize)
+        wx.Frame.__init__(self, parent, title = "Basketball Stat Tracking App by Remi1771", pos = wx.DefaultPosition, size = wx.Size(512,218))
+                
+        Sizer = wx.GridBagSizer(1, 10)
         
-        bSizer1 = wx.BoxSizer(wx.VERTICAL)
-        
+        bitmap = wx.Bitmap('path_to_your_icon_file')
         self.new_game_button = wx.Button(self, wx.ID_ANY, "New Game", wx.DefaultPosition, wx.DefaultSize, 0)
-        bSizer1.Add(self.new_game_button, 0, wx.ALL, 5)
+        Sizer.Add(self.new_game_button, pos=wx.GBPosition(0, 0))
         
         self.load_button = wx.Button(self, wx.ID_ANY, "Load", wx.DefaultPosition, wx.DefaultSize, 0)
-        bSizer1.Add(self.load_button, 0, wx.ALL, 5)
+        Sizer.Add(self.load_button, pos=wx.GBPosition(1, 0))
         
-        self.SetSizer(bSizer1)
+        self.SetSizer(Sizer)
         self.Layout()
         
         self.Centre(wx.BOTH)
-        
-        # Connect Events
-        self.new_game_button.Bind(wx.EVT_BUTTON, self.show_screen_2)
-        self.load_button.Bind(wx.EVT_BUTTON, self.load_file)
+
+    def show_screen_2(self, event):
+        pass
+
+    def load_file(self, event):
+        pass
 
 
 
@@ -134,6 +136,7 @@ class Game:
         
 game = Game()
 
+'''
 #region ====Screen 1 (Create or Load a game)====
 def show_main_menu():
     try:
@@ -245,92 +248,11 @@ def show_screen_2():
     # Update the list of available players
     game.update_player_list()
 #endregion
+'''
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#region ====Screen 3 (Main)====
-def show_screen_3():
-    global last_action_label
-    clear_window()
-
-    # Create a label to display the current player in possession
-    current_player_label = tk.Label(mainwindow1, text=f"Current player in possession: {game.current_possession._name}")
-    current_player_label.grid(row=0, column=0)
-
-    # Create a label to display the last action
-    last_action_label = tk.Label(mainwindow1, text=f"{game.message}")
-    last_action_label.grid(row=1, column=0)
-
-    # Create a text entry for the action code
-    action_code_entry = tk.Entry(mainwindow1)
-    action_code_entry.grid(row=2, column=0)
-
-    # Create a button to input the action code
-    input_action_button = tk.Button(mainwindow1, text="Input Action Code", command=input_action_code)  # You need to define input_action_code
-    input_action_button.grid(row=2, column=1)
-
-    # Create buttons for different actions
-    dribble_button = tk.Button(mainwindow1, text="Dribble", command=game.dribble)  # You need to define dribble
-    dribble_button.grid(row=3, column=0)
-
-    pass_button = tk.Button(mainwindow1, text="Pass", command=show_screen_pass)  # You need to define show_screen_pass
-    pass_button.grid(row=4, column=0)
-
-    shoot_button = tk.Button(mainwindow1, text="Shoot", command=show_screen_shot)  # You need to define show_screen_shoot
-    shoot_button.grid(row=5, column=0)
-
-    turnover_button = tk.Button(mainwindow1, text="Turnover", command=show_screen_turnover)  # You need to define show_screen_turnover
-    turnover_button.grid(row=6, column=0)
-
-    foul_button = tk.Button(mainwindow1, text="Foul", command=show_screen_foul)  # You need to define show_screen_foul
-    foul_button.grid(row=7, column=0)
-#endregion
-
-
-#=======Screen 5 (Pass)=======#
-def show_screen_pass():
-    pass
-#=======Screen 6 (Shot)=======#
-def show_screen_shot():
-    pass
-#=======Screen 6.a (Assist)=======#
-
-#=======Screen 6.b (Rebound)=======#
-
-#=======Screen 7 (Turnover)=======#   
-def show_screen_turnover():
-    pass
-
-#=======Screen 8 (Foul)=======#
-def show_screen_foul():
-    pass
-    
-
-# Start with the main menu
-show_main_menu()
-
-# Run the application
-mainwindow1.mainloop()
+app = wx.App()
+frame = MainFrame(None)
+frame.Show(True)
+app.MainLoop()
 
 
