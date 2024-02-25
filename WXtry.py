@@ -10,27 +10,43 @@ from tkinter import messagebox
 from easyButtons import * #because fuck you, that's why no need to do shit complicated
 #I SPENT SO MUCH FUCKING TIME ON CREATING EASYBUTTONS BUT NOW IT WORKS FUCK YEAAAAAA
 
-
 #region Classes:
+
+class AnotherPanel(wx.Panel):
+    def __init__(self, parent):
+        wx.Panel.__init__(self, parent)
+        
+        # Create a sizer for this panel
+        self.Sizer = wx.GridBagSizer(1,0)
+        
+        # Add some components to this panel
+        self.button = wx.Button(self, label="Click Me")
+        self.Sizer.Add(self.button, pos=(0,0))
+        
+        self.SetSizer(self.Sizer)
+        self.Layout()
+
+
 class MainFrame(wx.Frame):
     def __init__(self, parent):
-        wx.Frame.__init__(self, parent, title = "Basketball Stat Tracking App by Remi1771", size = wx.Size(512,218))
+        wx.Frame.__init__(self, parent, title = "Basketball Stat Tracking App by Remi1771", size = wx.Size(337,218))
         
+        self.SetMinSize((337, 218)) #minimum size, duh
+        self.SetMaxSize((337, -1)) #maximum size, 500 is the max width, 10000 is a large number for height
+
+        self.anotherPanel = AnotherPanel(self)
+        self.Sizer.Add(self.anotherPanel, pos=(1,0))
+
         self.Sizer = wx.GridBagSizer(1,0)  # Create a sizer
-        #region old button system
-        '''
-        LOAD_ICON = wx.Bitmap('FILE_OPEN.ICO')
-        self.load_button = wx.BitmapButton(self, bitmap=LOAD_ICON, style=0)
-        self.load_button.SetToolTip("LOAD FILE")
-        self.Sizer.Add(self.load_button, pos=wx.GBPosition(0, 0))
-        self.load_button.Bind(wx.EVT_BUTTON, self.LOAD_FILE)  # Bind the button click event to the load_file method
-''' 
-        #endregion
         
         EasyButton(self, 'FILE_LOAD', 0, 0)
         EasyButton(self, 'FILE_SAVE', 0, 1)
         EasyButton(self, 'PLAYERS', 0, 2)
         EasyButton(self, 'SHOT', 0, 3)
+        EasyButton(self, 'PASSING', 0, 4)
+        EasyButton(self, 'TURNOVER', 0, 5)
+        EasyButton(self, 'FOUL', 0, 6)
+        EasyButton(self, 'SETTINGS', 0, 7)
 
         self.SetSizer(self.Sizer)
         self.Layout() #This line asks the window to re-layout its components.
@@ -49,8 +65,17 @@ class MainFrame(wx.Frame):
     def SHOT(self, event):
         pass
 
+    def PASSING(self, event):
+        pass
 
+    def TURNOVER(self, event):
+        pass
 
+    def FOUL(self, event):
+        pass
+
+    def SETTINGS(self, event):
+        pass
 
 class Player:
     def __init__(self, name, team, number):
