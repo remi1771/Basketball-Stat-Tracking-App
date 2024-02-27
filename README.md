@@ -1,5 +1,14 @@
 # Patch Notes
 
+Version 0.02
+
+## Changes and Additions
+
+1. **Renaming:** Renamed `patch notes.md` to `README.md` so it's accesible as soon as you enter | renamed `to-do.md` to `todo.md` so it can work with a todo extension I have.
+2. **Updated EasyButton Modulet Class Integration:** Updated `EasyButton` class directly to `WXtry.py` instead of having it as a separate module for troubleshooting purposes.
+3. **Deleted unused/unnecessary files:** deleted `HowToGUI.py`, `players.pkl`
+
+
 
 Version 0.01
 
