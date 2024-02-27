@@ -4,6 +4,7 @@
 - **Updated `README.MD` for readability.**
 - **Updated ``Todo.md``**
 - **Deleted ``TestSaveFile`` and ``Methods.py``**
+- **Updated some icons to optimize for space:** I think the whole thing is 1kb smaller now lol :)
 
 ### Version 0.02
 
