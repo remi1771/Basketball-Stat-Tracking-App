@@ -12,55 +12,92 @@ from easyButtons import * #because fuck you, that's why no need to do shit compl
 
 #region Classes:
 
-class AnotherPanel(wx.Panel):
-    def __init__(self, parent):
-        wx.Panel.__init__(self, parent)
-        
-        # Create a sizer for this panel
-        self.Sizer = wx.GridBagSizer(1,0)
-        
-        # Add some components to this panel
-        self.button = wx.Button(self, label="Click Me")
-        self.Sizer.Add(self.button, pos=(0,0))
-        
-        self.SetSizer(self.Sizer)
-        self.Layout()
+class EasyButton:
+    def __init__(self, parent, name, hpos=0, vpos=0, enabled=True):
+        self.parent = parent
+        self.name = name
+        self.hpos = hpos
+        self.vpos = vpos
+        self.enabled = enabled
+        self.create_button()
 
-
+    def create_button(self):
+        ICON = wx.Bitmap(f'ICONS/{self.name}.ICO')
+        self.button = wx.BitmapButton(self.parent, bitmap=ICON, style=0)
+        self.button.SetToolTip(self.name.replace('_', ' ').title())
+        Sizer = self.parent.GetSizer()
+        Sizer.Add(self.button, pos=wx.GBPosition(self.vpos, self.hpos))
+        self.button.Bind(wx.EVT_BUTTON, getattr(self.parent, self.name))
+        self.button.Enable(self.enabled)
+        
 class MainFrame(wx.Frame):
     def __init__(self, parent):
-        wx.Frame.__init__(self, parent, title = "Basketball Stat Tracking App by Remi1771", size = wx.Size(337,218))
-        
-        self.SetMinSize((337, 218)) #minimum size, duh
-        self.SetMaxSize((337, -1)) #maximum size, 500 is the max width, 10000 is a large number for height
 
-        self.anotherPanel = AnotherPanel(self)
-        self.Sizer.Add(self.anotherPanel, pos=(1,0))
+        horizontal_size = 376
+        vertical_size = 218
 
-        self.Sizer = wx.GridBagSizer(1,0)  # Create a sizer
+        wx.Frame.__init__(self, parent, title = "Basketball Stat Tracking App by Remi1771", size = wx.Size(horizontal_size,vertical_size))
         
-        EasyButton(self, 'FILE_LOAD', 0, 0)
-        EasyButton(self, 'FILE_SAVE', 0, 1)
-        EasyButton(self, 'PLAYERS', 0, 2)
-        EasyButton(self, 'SHOT', 0, 3)
-        EasyButton(self, 'PASSING', 0, 4)
-        EasyButton(self, 'TURNOVER', 0, 5)
-        EasyButton(self, 'FOUL', 0, 6)
-        EasyButton(self, 'SETTINGS', 0, 7)
+        #self.SetMinSize((horizontal_size, vertical_size)) #minimum size, duh
+        #self.SetMaxSize((horizontal_size, -1)) #maximum size, 500 is the max width, 10000 is a large number for height
+
+        self.Sizer = wx.GridBagSizer(1, 0)
+ 
+        #EasyButton(self, 'NAME OF BUTTON, ICON, AND ALL', HPOS DEFAULTS TO 0, VPOS DEFAULTS TO 0, ENABLED DEFAULTS TO TRUE)
+        EasyButton(self, 'FILE_LOAD')
+        EasyButton(self, 'FILE_SAVE', 1)
+        EasyButton(self, 'PLAYERS', 2)
+        EasyButton(self, 'SHOT', 3, enabled=False)
+        EasyButton(self, 'PASSING', 4, enabled=False)
+        EasyButton(self, 'TURNOVER', 5)
+        EasyButton(self, 'FOUL', 6)
+        EasyButton(self, 'NEW', 7)
+        EasyButton(self, 'SETTINGS', 8)
+
+        self.notebook = wx.Notebook(self)
+        self.page1 = wx.Window(self.notebook)
+        self.page2 = wx.Window(self.notebook)
+        self.notebook.AddPage(self.page1, "Teams")
+        self.notebook.AddPage(self.page2, "Players")
+
+        page1_sizer = wx.GridBagSizer(1, 0)
+        self.page1.SetSizer(page1_sizer)
+
+        
+        self.Sizer.Add(self.notebook, pos=(1, 0), span=wx.GBSpan(1, 9), flag=wx.EXPAND)
 
         self.SetSizer(self.Sizer)
+        self.page1.Layout()
         self.Layout() #This line asks the window to re-layout its components.
         self.Centre(wx.BOTH) #centers the window on the screen
 
+        def update_player_list(self, players):
+            self.player_list.Clear()
+            for player in players:
+                self.player_list.Append(player._name)
+
+    #region DEF
+    def NEW(self, event):
+        print("Add button clicked")
 
     def PLAYERS(self,event):
         print("Players :D")
 
     def FILE_LOAD(self, event):
-        print("load file :D")
+        dialog = wx.FileDialog(self, "Choose a file", "", "", "*.*", wx.FD_OPEN)
+        if dialog.ShowModal() == wx.ID_OK:
+            filename = dialog.GetPath()
+            with open(filename, 'rb') as f:
+                return pickle.load(f)
+        dialog.Destroy()
 
     def FILE_SAVE(self, event):
-        pass
+        dialog = wx.FileDialog(self, "Choose a file", "", "", "*.*", wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT)
+        if dialog.ShowModal() == wx.ID_OK:
+            filename = dialog.GetPath()
+            with open(filename, 'wb') as f:
+                pickle.dump(self, f)
+        dialog.Destroy()
 
     def SHOT(self, event):
         pass
@@ -76,14 +113,32 @@ class MainFrame(wx.Frame):
 
     def SETTINGS(self, event):
         pass
+    #endregion
 
 class Player:
     def __init__(self, name, team, number):
         self._name = name
         self._team = team
         self._number = number
-        self._possessions = 0
+        self._possession = 0
         self._dribbles = 0
+        self._shot_attempts = 0
+        self._shot_made = 0
+        self._layup_attempts = 0
+        self._layup_made = 0
+        self._2pt_attempts = 0
+        self._2pt_made = 0
+        self._3pt_attempts = 0
+        self._3pt_made = 0
+        self._pass_attempt = 0
+        self._pass_made = 0
+        self._turnovers = 0
+        self._steals = 0
+        self._fouls = 0
+        self._blocks = 0
+        self._offensive_rebounds = 0
+        self._defensive_rebounds = 0
+        self_total_rebounds = 0
 
 class Team:
     def __init__(self, name):
@@ -131,119 +186,6 @@ class Game:
         
 game = Game()
 
-'''
-#region ====Screen 1 (Create or Load a game)====
-def show_main_menu():
-    try:
-        clear_window()
-        tk.Button(mainwindow1, text="New Game", command=show_screen_2).pack()
-        tk.Button(mainwindow1, text="Load", command=load_file).pack()
-    except Exception as e:
-        messagebox.showerror("Error", str(e))
-#endregion
-  
-#region ====Screen 2 (Select Players)====
-def show_screen_2():
-    clear_window()
-
-    def start_match():
-        try:
-            team1_players = [player for player in game.players if player._team == "Team 1"]
-            team2_players = [player for player in game.players if player._team == "Team 2"]
-            if len(team1_players) < 2 or len(team2_players) < 2:
-                raise ValueError("There must be at least two players on each team.")
-            if not game.current_possession:
-                raise ValueError("A player must have possession before starting the match.")
-            selected_player_name = player_var.get()
-            for player in game.players:
-                if player._name == selected_player_name:
-                    game.current_possession = player
-                    print(game.current_possession)
-                    break
-            show_screen_3()
-        except ValueError as e:
-            messagebox.showerror("Error", str(e))
-              
-    def add_player():
-        try:
-            player_name = player_name_entry.get()
-            player_number = player_number_entry.get()
-            team = team_var.get()
-            if not player_name or not player_number:
-                raise ValueError("Both player name and number must be provided.")
-            player = Player(player_name, team, player_number)
-            game.add_player(player)
-            print(f"Added player {player_name} with number {player_number} to {team}")
-
-            # Clear the input fields
-            player_name_entry.delete(0, 'end')
-            player_number_entry.delete(0, 'end')
-            team_var.set("Select Team")
-
-            # Update the list of available players
-            game.update_player_list()
-            show_screen_2()
-        except ValueError as e:
-            messagebox.showerror("Error", str(e))
-
-    #region Buttons
-    # Create a label to display the available players
-    global player_list
-    player_list_label_label = tk.Label(mainwindow1, text="Players Available")
-    player_list_label_label.grid(row=7, column=0)
-    player_list = tk.Label(mainwindow1)
-    player_list.grid(row=7, column=1)
-
-    # Player name entry
-    player_name_label = tk.Label(mainwindow1, text="Player Name:")
-    player_name_label.grid(row=1, column=0)
-    player_name_entry = tk.Entry(mainwindow1)
-    player_name_entry.grid(row=2, column=0)
-
-    # Player number entry
-    player_number_label = tk.Label(mainwindow1, text="Number:")
-    player_number_label.grid(row=1, column=2)
-    player_number_entry = tk.Entry(mainwindow1)
-    player_number_entry.grid(row=2, column=2)
-
-    # Team selection dropdown
-    team_label = tk.Label(mainwindow1)
-    team_label.grid(row=2, column=1)
-    team_var = tk.StringVar(mainwindow1)
-    team_var.set("Team 1")  # default value
-    team_dropdown = tk.OptionMenu(mainwindow1, team_var, "Team 1", "Team 2")  # Add your teams here
-    team_dropdown.grid(row=2, column=1)
-
-    #Save and Load Buttons
-    save_button = tk.Button(mainwindow1, text="Save Players", command=save_players)
-    save_button.grid(row=4, column=0)
-
-    load_button = tk.Button(mainwindow1, text="Load Players", command=load_players)
-    load_button.grid(row=5, column=0)
-
-    # Add Player button
-    add_player_button = tk.Button(mainwindow1, text="Add Player", command=add_player)
-    add_player_button.grid(row=4, column=1)
-
-    # Initial posession player dropdown
-    select_label = tk.Label(mainwindow1, text="Select initial player possession:")
-    select_label.grid(row=6, column=0)
-
-    player_var = tk.StringVar(mainwindow1)
-    player_var.set("Select Player")  # default value
-    player_names = [player._name for player in game.players]
-    player_dropdown = tk.OptionMenu(mainwindow1, player_var, *player_names)
-    player_dropdown.grid(row=6, column=1)
-    
-    #"Start Match!" button
-    start_button = tk.Button(mainwindow1, text="Start Match!", command=start_match)
-    start_button.grid(row=8, column=0)
-    #endregion
-
-    # Update the list of available players
-    game.update_player_list()
-#endregion
-'''
 
 app = wx.App()
 frame = MainFrame(None)
