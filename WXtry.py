@@ -8,7 +8,6 @@ import tkinter as tk
 from tkinter import filedialog
 from tkinter import messagebox
 from easyButtons import * #because fuck you, that's why no need to do shit complicated
-#I SPENT SO MUCH FUCKING TIME ON CREATING EASYBUTTONS BUT NOW IT WORKS FUCK YEAAAAAA
 
 #region Classes:
 
@@ -57,8 +56,10 @@ class MainFrame(wx.Frame):
         self.notebook = wx.Notebook(self)
         self.page1 = wx.Window(self.notebook)
         self.page2 = wx.Window(self.notebook)
+        self.page3 = wx.Window(self.notebook)
         self.notebook.AddPage(self.page1, "Teams")
         self.notebook.AddPage(self.page2, "Players")
+        self.notebook.AddPage(self.page2, "Record")
 
         page1_sizer = wx.GridBagSizer(1, 0)
         self.page1.SetSizer(page1_sizer)
